@@ -1,5 +1,5 @@
 import { Component } from "react";
-// import { toast } from "react-toastify";
+import { toast } from "react-toastify";
 import Button from "../Button/Button";
 import styles from "./Searchbar.module.css";
 
@@ -17,15 +17,11 @@ export default class Searchbar extends Component {
   onChangeInput = (e) => {
     e.preventDefault();
     if (this.state.findImage.trim() === "") {
-      // toast.warn("🦄 Wow so easy!", {
-      //   position: "top-right",
-      //   autoClose: 5000,
-      //   hideProgressBar: false,
-      //   closeOnClick: false,
-      //   pauseOnHover: true,
-      //   draggable: true,
-      //   progress: undefined,
-      // });
+      toast.error("Please, enter your request!", {
+        theme: "colored",
+      });
+      this.props.onSubmit(this.state.findImage);
+      this.setState({ findImage: "" });
       return;
     }
     this.props.onSubmit(this.state.findImage);

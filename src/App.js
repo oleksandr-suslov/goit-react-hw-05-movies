@@ -1,5 +1,6 @@
 import { Component } from "react";
-// import { ToastContainer } from "react-toastify";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Searchbar from "./components/Searchbar/Searchbar";
 import ImageGallery from "./components/ImageGallery/ImageGallery";
 import getImagesApi from "./utility/ServiceApi";
@@ -18,11 +19,12 @@ export default class App extends Component {
     page: 1,
     isLoading: false,
     showModal: false,
+    onModalUrl: "",
   };
 
-  componentDidMount() {
-    this.searchImages();
-  }
+  // componentDidMount() {
+  //   this.searchImages();
+  // }
   componentDidUpdate(prevProps, prevState) {
     const { findImage, page } = this.state;
 
@@ -35,17 +37,22 @@ export default class App extends Component {
     }
   }
   handleFormSubmit = (findImage) => {
-    this.setState({ findImage });
-    console.log(this.state.findImage);
+    if (findImage.trim() === "") {
+      this.setState({ images: [] });
+    } else {
+      this.setState({ findImage });
+      console.log(this.state.findImage);
+    }
   };
 
-  toggleShowModal = () => {
+  toggleShowModal = (url) => {
     this.setState(({ showModal }) => ({
       showModal: !showModal,
+      onModalUrl: url,
     }));
   };
 
-  searchImages(findImage = "", page = 1) {
+  searchImages(findImage, page) {
     getImagesApi(findImage, page).then((data) => {
       if (page === 1) {
         this.setState({
@@ -69,6 +76,7 @@ export default class App extends Component {
       page: prevState.page + 1,
     }));
   };
+
   render() {
     return (
       <div className={styles.App}>
@@ -83,20 +91,10 @@ export default class App extends Component {
         />
         {this.state.showModal && (
           <Modal onClose={this.toggleShowModal}>
-            <img src="#" alt="#" />
+            <img src={this.state.onModalUrl} alt="#" />
           </Modal>
         )}
-        {/* <ToastContainer
-          position="top-right"
-          autoClose={2000}
-          hideProgressBar={false}
-          newestOnTop={false}
-          closeOnClick={false}
-          rtl={false}
-          pauseOnFocusLoss
-          draggable
-          pauseOnHover
-        /> */}
+        <ToastContainer autoClose={3000} />
       </div>
     );
   }
