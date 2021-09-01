@@ -1,0 +1,13 @@
+.mainSection {
+  width: 1400px;
+  display: block;
+  margin: 0 auto;
+  text-align: center;
+  padding: 15px 0;
+  font-size: 38px;
+  line-height: 24px;
+  font-style: italic;
+  font-weight: 500;
+  min-width: 180px;
+  color: #3f51b5;
+}

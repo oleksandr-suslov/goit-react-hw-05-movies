@@ -16,19 +16,21 @@ export default class Searchbar extends Component {
 
   onChangeInput = (e) => {
     e.preventDefault();
-    if (this.state.findImage.trim() === "") {
+    const { findImage } = this.state;
+    if (findImage.trim() === "") {
       toast.error("Please, enter your request!", {
         theme: "colored",
       });
-      this.props.onSubmit(this.state.findImage);
+      this.props.onSubmit(findImage);
       this.setState({ findImage: "" });
       return;
     }
-    this.props.onSubmit(this.state.findImage);
+    this.props.onSubmit(findImage);
     this.setState({ findImage: "" });
   };
 
   render() {
+    const { findImage } = this.state;
     return (
       <header className={styles.Searchbar}>
         <form className={styles.SearchForm} onSubmit={this.onChangeInput}>
@@ -41,10 +43,10 @@ export default class Searchbar extends Component {
           <input
             className={styles.SearchFormInput}
             type="text"
-            autocomplete="off"
-            autofocus
+            autoComplete="off"
+            autoFocus
             placeholder="Search images and photos"
-            value={this.state.findImage}
+            value={findImage}
             onChange={this.handleFindImage}
           />
         </form>
