@@ -6,7 +6,7 @@ import getImagesApi from "./utility/ServiceApi";
 
 // import Loader from "./components/Loader/Loader";
 import Button from "./components/Button/Button";
-// import Modal from "./components/Modal/Modal";
+import Modal from "./components/Modal/Modal";
 import styles from "./App.css";
 
 var shortid = require("shortid");
@@ -16,7 +16,8 @@ export default class App extends Component {
     findImage: "",
     images: [],
     page: 1,
-    loading: false,
+    isLoading: false,
+    showModal: false,
   };
 
   componentDidMount() {
@@ -38,13 +39,13 @@ export default class App extends Component {
     console.log(this.state.findImage);
   };
 
-  searchImages(findImage = "", page = 1) {
-    // if ( findImage !== '') {
-    //   this.setState({
-    //     isLoading: true,
-    //     notify: false,
-    //   });
+  toggleShowModal = () => {
+    this.setState(({ showModal }) => ({
+      showModal: !showModal,
+    }));
+  };
 
+  searchImages(findImage = "", page = 1) {
     getImagesApi(findImage, page).then((data) => {
       if (page === 1) {
         this.setState({
@@ -59,12 +60,11 @@ export default class App extends Component {
           behavior: "smooth",
         });
       }
-      // this.checkButtonAndNotify();
     });
     // .catch((error) => this.setState({ error }))
     // .finally(() => this.setState({ isLoading: false }));
   }
-  onButtonMoreClick = () => {
+  onButtonNextPage = () => {
     this.setState((prevState) => ({
       page: prevState.page + 1,
     }));
@@ -73,15 +73,19 @@ export default class App extends Component {
     return (
       <div className={styles.App}>
         <Searchbar onSubmit={this.handleFormSubmit} />
-        <ImageGallery arr={this.state.images} />
+        <ImageGallery arr={this.state.images} onClick={this.toggleShowModal} />
         {/* <Loader /> */}
         <Button
           type="button"
           name="Load more"
           id={shortid.generate()}
-          clickOnBtn={this.onButtonMoreClick}
+          clickOnBtn={this.onButtonNextPage}
         />
-        {/* <Modal> </Modal> */}
+        {this.state.showModal && (
+          <Modal onClose={this.toggleShowModal}>
+            <img src="#" alt="#" />
+          </Modal>
+        )}
         {/* <ToastContainer
           position="top-right"
           autoClose={2000}

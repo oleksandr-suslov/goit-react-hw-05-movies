@@ -9,9 +9,11 @@ export default class Searchbar extends Component {
   state = {
     findImage: "",
   };
+
   handleFindImage = (e) => {
     this.setState({ findImage: e.currentTarget.value.toLowerCase() });
   };
+
   onChangeInput = (e) => {
     e.preventDefault();
     if (this.state.findImage.trim() === "") {
@@ -29,6 +31,7 @@ export default class Searchbar extends Component {
     this.props.onSubmit(this.state.findImage);
     this.setState({ findImage: "" });
   };
+
   render() {
     return (
       <header className={styles.Searchbar}>
@@ -38,13 +41,12 @@ export default class Searchbar extends Component {
             newClassName={styles.SearchFormButton}
             id={shortid.generate()}
           />
-          {/* <button type="submit" className={styles.SearchFormButton}></button> */}
 
           <input
             className={styles.SearchFormInput}
             type="text"
-            // autocomplete="off"
-            // autofocus
+            autocomplete="off"
+            autofocus
             placeholder="Search images and photos"
             value={this.state.findImage}
             onChange={this.handleFindImage}
