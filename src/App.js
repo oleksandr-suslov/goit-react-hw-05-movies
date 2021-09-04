@@ -1,62 +1,50 @@
-import { Component } from "react";
+import { useState, useEffect } from "react";
 import { ToastContainer, toast } from "react-toastify";
-import Loader from "react-loader-spinner";
 import "react-toastify/dist/ReactToastify.css";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
+
 import Searchbar from "./components/Searchbar/Searchbar";
-import Section from "./components/Section/Section";
-import ImageGallery from "./components/ImageGallery/ImageGallery";
-import getImagesApi from "./utility/ServiceApi";
-import Button from "./components/Button/Button";
+import { serviceApi, unit } from "./utility/ServiceApi";
 import Modal from "./components/Modal/Modal";
+import View from "./components/View/View";
 import styles from "./App.css";
 
-var shortid = require("shortid");
+export default function App() {
+  const [find, setFind] = useState("");
+  const [images, setImages] = useState([]);
+  const [page, setPage] = useState(1);
+  const [status, setStatus] = useState("idle");
+  const [showModal, setShowModal] = useState(false);
+  const [onModalUrl, setOnModalUrl] = useState("");
+  const [totalPage, setTotalPage] = useState(true);
 
-export default class App extends Component {
-  state = {
-    findImage: "",
-    images: [],
-    page: 1,
-    isLoading: false,
-    showModal: false,
-    onModalUrl: "",
-  };
-
-  componentDidUpdate(prevProps, prevState) {
-    const { findImage, page } = this.state;
-
-    if (prevState.findImage !== findImage) {
-      this.searchImages(findImage, 1);
-      this.setState({ page: 1 });
-    }
-    if (prevState.page !== page) {
-      this.searchImages(findImage, page);
-    }
-  }
-  handleFormSubmit = (findImage) => {
-    if (findImage.trim() === "") {
-      this.setState({ images: [] });
+  const handleFormSubmit = (data) => {
+    setImages([]);
+    setTotalPage(true);
+    setStatus("idle");
+    if (data.trim() === "") {
     } else {
-      this.setState({ findImage });
+      setFind(data);
     }
   };
-
-  toggleShowModal = (url) => {
-    this.setState(({ showModal }) => ({
-      showModal: !showModal,
-      onModalUrl: url,
-    }));
+  const toggleShowModal = (url) => {
+    setShowModal(!showModal);
+    setOnModalUrl(url);
   };
 
-  searchImages(findImage, page) {
-    if (findImage !== "") {
-      this.setState({
-        isLoading: true,
-      });
+  useEffect(() => {
+    if (find === "") {
+      return;
     }
-    getImagesApi(findImage, page)
+    if (find !== "") {
+      setStatus("pending");
+    }
+    serviceApi(find, page)
       .then((data) => {
+        const findPages = Math.ceil(data.totalHits / unit);
+        if (page === findPages) {
+          setTotalPage(false);
+        }
         if (page === 1) {
           if (data.hits.length === 0) {
             toast.error("No result were found for your search", {
@@ -64,14 +52,15 @@ export default class App extends Component {
               position: "top-left",
               autoClose: 5000,
             });
+
+            return setStatus("idle");
           }
-          this.setState({
-            images: data.hits,
-          });
+          setImages(data.hits);
+          setStatus("resolved");
         } else {
-          this.setState((prevState) => ({
-            images: [...prevState.images, ...data.hits],
-          }));
+          setImages([...images, ...data.hits]);
+          setStatus("resolved");
+
           window.scrollTo({
             top: document.documentElement.scrollHeight,
             behavior: "smooth",
@@ -82,51 +71,30 @@ export default class App extends Component {
         toast.error(error, {
           theme: "colored",
         });
-      })
-      .finally(() => this.setState({ isLoading: false }));
-  }
-  onButtonNextPage = () => {
-    this.setState((prevState) => ({
-      page: prevState.page + 1,
-    }));
+        setStatus("rejected");
+      });
+  }, [find, page]);
+
+  const onButtonNextPage = () => {
+    setPage((prevState) => prevState + 1);
   };
 
-  render() {
-    const { images, isLoading, onModalUrl, showModal } = this.state;
-    return (
-      <div className={styles.App}>
-        <Searchbar onSubmit={this.handleFormSubmit} />
-        {(images.length === 0 && (
-          <Section>
-            <p>Please input search request</p>
-          </Section>
-        )) || (
-          <Section>
-            <ImageGallery arr={images} onClick={this.toggleShowModal} />
-            {isLoading && (
-              <Loader
-                type="BallTriangle"
-                color="#00BFFF"
-                height={200}
-                width={200}
-              />
-            )}
-
-            <Button
-              type="button"
-              name="Load more"
-              id={shortid.generate()}
-              clickOnBtn={this.onButtonNextPage}
-            />
-          </Section>
-        )}
-        {showModal && (
-          <Modal onClose={this.toggleShowModal}>
-            <img src={onModalUrl} alt="#" />
-          </Modal>
-        )}
-        <ToastContainer autoClose={3000} />
-      </div>
-    );
-  }
+  return (
+    <div className={styles.App}>
+      <Searchbar onSubmit={handleFormSubmit} />
+      <View
+        hideBtn={totalPage}
+        images={images}
+        status={status}
+        onButtonNextPage={onButtonNextPage}
+        toggleShowModal={toggleShowModal}
+      />
+      {showModal && (
+        <Modal onClose={toggleShowModal}>
+          <img src={onModalUrl} alt="#" />
+        </Modal>
+      )}
+      <ToastContainer autoClose={3000} />
+    </div>
+  );
 }
