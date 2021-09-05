@@ -16,13 +16,13 @@ export default function App() {
   const [status, setStatus] = useState("idle");
   const [showModal, setShowModal] = useState(false);
   const [onModalUrl, setOnModalUrl] = useState("");
-  const [totalPage, setTotalPage] = useState(true);
+  const [showBtn, setShowBtn] = useState(true);
 
   const handleFormSubmit = (data) => {
-    setImages([]);
-    setTotalPage(true);
-    setStatus("idle");
     if (data.trim() === "") {
+      setFind("");
+      setImages([]);
+      setStatus("idle");
     } else {
       setFind(data);
     }
@@ -33,6 +33,8 @@ export default function App() {
   };
 
   useEffect(() => {
+    console.log();
+
     if (find === "") {
       return;
     }
@@ -41,20 +43,21 @@ export default function App() {
     }
     serviceApi(find, page)
       .then((data) => {
-        const findPages = Math.ceil(data.totalHits / unit);
-        if (page === findPages) {
-          setTotalPage(false);
+        setShowBtn(true);
+        const findTotalPages = Math.ceil(data.totalHits / unit);
+        if (page === findTotalPages) {
+          setShowBtn(false);
+        }
+        if (data.hits.length === 0) {
+          toast.error("No result were found for your search", {
+            theme: "colored",
+            position: "top-left",
+            autoClose: 5000,
+          });
+          setPage(1);
+          return setStatus("idle");
         }
         if (page === 1) {
-          if (data.hits.length === 0) {
-            toast.error("No result were found for your search", {
-              theme: "colored",
-              position: "top-left",
-              autoClose: 5000,
-            });
-
-            return setStatus("idle");
-          }
           setImages(data.hits);
           setStatus("resolved");
         } else {
@@ -83,7 +86,7 @@ export default function App() {
     <div className={styles.App}>
       <Searchbar onSubmit={handleFormSubmit} />
       <View
-        hideBtn={totalPage}
+        hideBtn={showBtn}
         images={images}
         status={status}
         onButtonNextPage={onButtonNextPage}
