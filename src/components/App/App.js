@@ -1,12 +1,12 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
-import Searchbar from "./components/Searchbar/Searchbar";
-import { serviceApi, unit } from "./utility/ServiceApi";
-import Modal from "./components/Modal/Modal";
-import View from "./components/View/View";
+import Searchbar from "../Searchbar/Searchbar";
+import { serviceApi, unit } from "../../utility/ServiceApi";
+import Modal from "../Modal/Modal";
+import View from "../View/View";
 import styles from "./App.css";
 
 export default function App() {
@@ -33,7 +33,7 @@ export default function App() {
   };
 
   useEffect(() => {
-    console.log();
+    // console.log();
 
     if (find === "") {
       return;
@@ -49,13 +49,16 @@ export default function App() {
           setShowBtn(false);
         }
         if (data.hits.length === 0) {
+          // console.log("no picture");
           toast.error("No result were found for your search", {
             theme: "colored",
             position: "top-left",
             autoClose: 5000,
           });
+
           setPage(1);
-          return setStatus("idle");
+          setStatus("idle");
+          return;
         }
         if (page === 1) {
           setImages(data.hits);

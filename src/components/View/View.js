@@ -24,6 +24,11 @@ export default function View({
   if (status === "pending") {
     return (
       <Section>
+        <ImageGallery
+          arr={images}
+          onClick={toggleShowModal}
+          key={shortid.generate()}
+        />
         <Loader type="BallTriangle" color="#00BFFF" height={200} width={200} />
       </Section>
     );
@@ -39,7 +44,11 @@ export default function View({
   if (status === "resolved") {
     return (
       <Section>
-        <ImageGallery arr={images} onClick={toggleShowModal} />
+        <ImageGallery
+          arr={images}
+          onClick={toggleShowModal}
+          key={shortid.generate()}
+        />
 
         {hideBtn && (
           <Button
