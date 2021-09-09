@@ -1,105 +1,105 @@
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect } from "react";
+import { Switch, Route } from "react-router-dom";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 
-import Searchbar from "../Searchbar/Searchbar";
-import { serviceApi, unit } from "../../utility/ServiceApi";
-import Modal from "../Modal/Modal";
-import View from "../View/View";
+import NotFoundPage from "../Pages/NotFoundPage";
+import HomePage from "../Pages/HomePage";
+import MoviePage from "../Pages/MoviePage";
+import MovieDetailsPage from "../Pages/MovieDetailsPage";
+import Header from "../Header/Header";
+import { serviceApi } from "../../utility/ServiceApi";
+
+// import View from "../View/View";
 import styles from "./App.css";
 
+export const finding = {
+  TRENDING: "trending",
+  SEARCH: "search",
+  MOVIE: "movie",
+};
+
 export default function App() {
+  const [movieTrend, setMovieTrend] = useState([]);
+  const [movieSearch, setMovieSearch] = useState([]);
   const [find, setFind] = useState("");
-  const [images, setImages] = useState([]);
-  const [page, setPage] = useState(1);
-  const [status, setStatus] = useState("idle");
-  const [showModal, setShowModal] = useState(false);
-  const [onModalUrl, setOnModalUrl] = useState("");
-  const [showBtn, setShowBtn] = useState(true);
+  // const [images, setImages] = useState([]);
+  // const [page, setPage] = useState(1);
+  // const [status, setStatus] = useState("resolved");
+  // const [showModal, setShowModal] = useState(false);
+  // const [showBtn, setShowBtn] = useState(true);
 
   const handleFormSubmit = (data) => {
     if (data.trim() === "") {
       setFind("");
-      setImages([]);
-      setStatus("idle");
+      // setImages([]);
+      // setStatus("idle");
     } else {
       setFind(data);
     }
   };
-  const toggleShowModal = (url) => {
-    setShowModal(!showModal);
-    setOnModalUrl(url);
-  };
 
   useEffect(() => {
     // console.log();
-
     if (find === "") {
-      return;
-    }
-    if (find !== "") {
-      setStatus("pending");
-    }
-    serviceApi(find, page)
-      .then((data) => {
-        setShowBtn(true);
-        const findTotalPages = Math.ceil(data.totalHits / unit);
-        if (page === findTotalPages) {
-          setShowBtn(false);
-        }
-        if (data.hits.length === 0) {
-          // console.log("no picture");
-          toast.error("No result were found for your search", {
-            theme: "colored",
-            position: "top-left",
-            autoClose: 5000,
-          });
+      serviceApi(finding.TRENDING)
+        .then((data) => {
+          console.log("TRENDING", data);
+          setMovieTrend(data.results);
+          setMovieSearch([]);
 
-          setPage(1);
-          setStatus("idle");
           return;
-        }
-        if (page === 1) {
-          setImages(data.hits);
-          setStatus("resolved");
-        } else {
-          setImages([...images, ...data.hits]);
-          setStatus("resolved");
-
-          window.scrollTo({
-            top: document.documentElement.scrollHeight,
-            behavior: "smooth",
+        })
+        .catch((error) => {
+          toast.error(error, {
+            theme: "colored",
           });
-        }
+          // setStatus("rejected");
+        });
+    }
+
+    serviceApi(finding.SEARCH, find)
+      .then((data) => {
+        console.log("SEARCH", data.results);
+        setMovieSearch(data.results);
+
+        // setStatus("resolved");
       })
       .catch((error) => {
         toast.error(error, {
           theme: "colored",
         });
-        setStatus("rejected");
+        // setStatus("rejected");
       });
-  }, [find, page]);
 
-  const onButtonNextPage = () => {
-    setPage((prevState) => prevState + 1);
-  };
+    // if (find !== "") {
+    //   setStatus("pending");
+    // }
+  }, [find]);
+
+  // const onButtonNextPage = () => {
+  //   setPage((prevState) => prevState + 1);
+  // };
 
   return (
     <div className={styles.App}>
-      <Searchbar onSubmit={handleFormSubmit} />
-      <View
-        hideBtn={showBtn}
-        images={images}
-        status={status}
-        onButtonNextPage={onButtonNextPage}
-        toggleShowModal={toggleShowModal}
-      />
-      {showModal && (
-        <Modal onClose={toggleShowModal}>
-          <img src={onModalUrl} alt="#" />
-        </Modal>
-      )}
+      <Header />
+      <Switch>
+        <Route path="/" exact>
+          <HomePage movie={movieTrend} />
+        </Route>
+        <Route path="/movie" exact>
+          <MoviePage movie={movieSearch} onSubmit={handleFormSubmit} />
+        </Route>
+        <Route path="/movie/:movieId">
+          <MovieDetailsPage />
+        </Route>
+        <Route>
+          <NotFoundPage />
+        </Route>
+      </Switch>
+
       <ToastContainer autoClose={3000} />
     </div>
   );

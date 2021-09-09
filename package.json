@@ -1,8 +1,8 @@
 {
-  "name": "goit-react-hw-04-hooks-images",
+  "name": "goit-react-hw-05-movies",
   "version": "0.1.0",
   "private": true,
-  "homepage": "https://oleksandr-suslov.github.io/goit-react-hw-04-hooks-images",
+  "homepage": "https://oleksandr-suslov.github.io/goit-react-hw-05-movies",
   "dependencies": {
     "@testing-library/jest-dom": "^5.14.1",
     "@testing-library/react": "^11.2.7",
@@ -12,6 +12,7 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-loader-spinner": "^4.0.0",
+    "react-router-dom": "^5.3.0",
     "react-scripts": "4.0.3",
     "react-toastify": "^8.0.2",
     "shortid": "^2.2.16",

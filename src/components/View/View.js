@@ -1,7 +1,7 @@
 import Loader from "react-loader-spinner";
 import Section from "../Section/Section";
 import ImageGallery from "../ImageGallery/ImageGallery";
-import Button from "../Button/Button";
+// import Button from "../Button/Button";
 
 var shortid = require("shortid");
 
@@ -46,18 +46,9 @@ export default function View({
       <Section>
         <ImageGallery
           arr={images}
-          onClick={toggleShowModal}
+          // onClick={toggleShowModal}
           key={shortid.generate()}
         />
-
-        {hideBtn && (
-          <Button
-            type="button"
-            name="Load more"
-            id={shortid.generate()}
-            clickOnBtn={onButtonNextPage}
-          />
-        )}
       </Section>
     );
   }

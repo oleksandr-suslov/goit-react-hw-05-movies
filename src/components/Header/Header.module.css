@@ -1,0 +1,9 @@
+.NavList {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+.NavItem:nth-last-child(n + 2) {
+  margin-right: 50px;
+}

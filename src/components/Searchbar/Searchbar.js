@@ -1,6 +1,5 @@
 import { useState } from "react";
 import { toast } from "react-toastify";
-import Button from "../Button/Button";
 import styles from "./Searchbar.module.css";
 
 var shortid = require("shortid");
@@ -26,12 +25,6 @@ export default function Searchbar({ onSubmit }) {
   return (
     <header className={styles.Searchbar}>
       <form className={styles.SearchForm} onSubmit={onChangeInput}>
-        <Button
-          type="submit"
-          newClassName={styles.SearchFormButton}
-          id={shortid.generate()}
-        />
-
         <input
           className={styles.SearchFormInput}
           type="text"
@@ -41,6 +34,14 @@ export default function Searchbar({ onSubmit }) {
           value={find}
           onChange={handleFindImage}
         />
+        <button
+          className={styles.Button}
+          type="submit"
+          newClassName={styles.SearchFormButton}
+          id={shortid.generate()}
+        >
+          Search
+        </button>
       </form>
     </header>
   );
