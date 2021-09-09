@@ -9,6 +9,7 @@ const serviceApi = async (finding, firstVar, secondVar) => {
   let response;
   console.log('finding', finding);
   console.log('firstVar', firstVar);
+  console.log('secondVar', secondVar);
   switch (finding) {
       case "trending":
         response = await axios.get(`${BASE_URL}trending/movie/week?api_key=${KEY}`);
@@ -17,7 +18,7 @@ const serviceApi = async (finding, firstVar, secondVar) => {
          response = await axios.get(`${BASE_URL}search/movie?api_key=${KEY}&language=en-US&page=1&include_adult=false&query=${firstVar}`); 
         break;
       case "movie":
-        if (secondVar === 'credits')
+        if (secondVar === 'cast')
         {   response = await axios.get(`${BASE_URL}movie/${firstVar}/credits?api_key=${KEY}&language=en-US` ); 
         break;}
         if (secondVar === 'reviews')

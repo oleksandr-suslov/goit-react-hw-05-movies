@@ -6,14 +6,13 @@ import { Link, useRouteMatch } from "react-router-dom";
 // import ImageGalleryItem from "../ImageGalleryItem/ImageGalleryItem";
 // import styles from "./MoviePage.module.css";
 
-export default function MoviePage({ onSubmit, movie, onClick }) {
+export default function MoviePage({ info }) {
   const { url } = useRouteMatch();
+  console.log(info);
   // const url = "/movie";
   return (
     <Section>
-      <Searchbar onSubmit={onSubmit} />
-
-      <ImageGallery arr={movie} onClick={onClick} url={url} />
+      <h2>Reviews</h2>
     </Section>
   );
 }

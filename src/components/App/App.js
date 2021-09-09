@@ -11,7 +11,6 @@ import MovieDetailsPage from "../Pages/MovieDetailsPage";
 import Header from "../Header/Header";
 import { serviceApi } from "../../utility/ServiceApi";
 
-// import View from "../View/View";
 import styles from "./App.css";
 
 export const finding = {
@@ -23,23 +22,27 @@ export const finding = {
 export default function App() {
   const [movieTrend, setMovieTrend] = useState([]);
   const [movieSearch, setMovieSearch] = useState([]);
+  const [movieDetails, setMovieDetails] = useState([]);
   const [find, setFind] = useState("");
-  // const [images, setImages] = useState([]);
+  const [movieId, setMovieId] = useState(null);
   // const [page, setPage] = useState(1);
-  // const [status, setStatus] = useState("resolved");
-  // const [showModal, setShowModal] = useState(false);
+  const [aboutMovie, setAboutMovie] = useState(false);
+  const [showCastOrReviews, setCastOrReviews] = useState(false);
   // const [showBtn, setShowBtn] = useState(true);
 
   const handleFormSubmit = (data) => {
     if (data.trim() === "") {
       setFind("");
-      // setImages([]);
-      // setStatus("idle");
     } else {
       setFind(data);
     }
   };
-
+  const getMovieId = (id) => {
+    setMovieId(id);
+  };
+  const toggleCastOrReviews = (data) => {
+    setCastOrReviews(data);
+  };
   useEffect(() => {
     // console.log();
     if (find === "") {
@@ -48,22 +51,44 @@ export default function App() {
           console.log("TRENDING", data);
           setMovieTrend(data.results);
           setMovieSearch([]);
-
           return;
         })
         .catch((error) => {
           toast.error(error, {
             theme: "colored",
           });
-          // setStatus("rejected");
+        });
+    }
+    if (movieId) {
+      serviceApi(finding.MOVIE, movieId)
+        .then((data) => {
+          console.log("MOVIE details", data);
+          setMovieDetails(data);
+        })
+        .catch((error) => {
+          toast.error(error, {
+            theme: "colored",
+          });
         });
     }
 
+    if (showCastOrReviews) {
+      serviceApi(finding.MOVIE, movieId, showCastOrReviews)
+        .then((data) => {
+          console.log("MOVIE showCastOrReviews", data);
+          setAboutMovie(data);
+          return;
+        })
+        .catch((error) => {
+          toast.error(error, {
+            theme: "colored",
+          });
+        });
+    }
     serviceApi(finding.SEARCH, find)
       .then((data) => {
         console.log("SEARCH", data.results);
         setMovieSearch(data.results);
-
         // setStatus("resolved");
       })
       .catch((error) => {
@@ -72,11 +97,7 @@ export default function App() {
         });
         // setStatus("rejected");
       });
-
-    // if (find !== "") {
-    //   setStatus("pending");
-    // }
-  }, [find]);
+  }, [find, movieId, showCastOrReviews]);
 
   // const onButtonNextPage = () => {
   //   setPage((prevState) => prevState + 1);
@@ -87,14 +108,25 @@ export default function App() {
       <Header />
       <Switch>
         <Route path="/" exact>
-          <HomePage movie={movieTrend} />
+          <HomePage movie={movieTrend} onClick={getMovieId} />
         </Route>
+
         <Route path="/movie" exact>
-          <MoviePage movie={movieSearch} onSubmit={handleFormSubmit} />
+          <MoviePage
+            movie={movieSearch}
+            onSubmit={handleFormSubmit}
+            onClick={getMovieId}
+          />
         </Route>
+
         <Route path="/movie/:movieId">
-          <MovieDetailsPage />
+          <MovieDetailsPage
+            info={aboutMovie}
+            movie={movieDetails}
+            onClick={toggleCastOrReviews}
+          />
         </Route>
+
         <Route>
           <NotFoundPage />
         </Route>
