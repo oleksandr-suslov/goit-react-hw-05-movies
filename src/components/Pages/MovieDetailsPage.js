@@ -1,17 +1,29 @@
-// import { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import { Link, useRouteMatch, Route, useParams } from "react-router-dom";
+
+import { toast } from "react-toastify";
+
 import MovieCastPage from "../Pages/MovieCastPage";
 import MovieReviewsPage from "../Pages/MovieReviewsPage";
-// import { ToastContainer, toast } from "react-toastify";
-// import { serviceApi } from "../../utility/ServiceApi";
 import Section from "../Section/Section";
-// import { finding } from "../App/App";
-// import styles from "./Pages.module.css";
+import { serviceApi, finding } from "../../utility/ServiceApi";
 
-export default function MovieDetailsPage({ movie, onClick, info }) {
-  // const { movieId } = useParams();
+export default function MovieDetailsPage() {
+  const { movieId } = useParams();
+  const [movie, setMovie] = useState([]);
   const { url } = useRouteMatch();
-  console.log("info", info);
+  useEffect(() => {
+    if (movieId) {
+      serviceApi(finding.MOVIE, movieId)
+        .then(setMovie)
+        .catch((error) => {
+          toast.error(error, {
+            theme: "colored",
+          });
+        });
+    }
+  }, []);
+
   return (
     <Section>
       <h2>{movie.original_title}</h2>
@@ -20,29 +32,15 @@ export default function MovieDetailsPage({ movie, onClick, info }) {
         alt="movie.original_title"
       />
       <p>{movie.overview}</p>
-      <Link
-        to={`${url}/cast`}
-        onClick={() => {
-          onClick("cast");
-        }}
-      >
-        Cast
-      </Link>
-      <Link
-        to={`${url}/reviews`}
-        onClick={() => {
-          onClick("reviews");
-        }}
-      >
-        Reviews
-      </Link>
+      <Link to={`${url}/cast`}>Cast</Link>
+      <Link to={`${url}/reviews`}>Reviews</Link>
 
       <Route path="/movie/:movieId/cast">
-        <MovieCastPage info={info} />
+        <MovieCastPage info={"cast"} />
       </Route>
 
       <Route path="/movie/:movieId/reviews">
-        <MovieReviewsPage info={info} />
+        <MovieReviewsPage info={"reviews"} />
       </Route>
     </Section>
   );

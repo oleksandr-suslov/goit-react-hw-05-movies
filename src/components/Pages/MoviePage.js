@@ -1,19 +1,41 @@
-// import styles from "./Header.module.css";
+import { useState, useEffect } from "react";
+import { useRouteMatch } from "react-router-dom";
+
+import { toast } from "react-toastify";
+
 import Searchbar from "../Searchbar/Searchbar";
 import Section from "../Section/Section";
-import ImageGallery from "../ImageGallery/ImageGallery";
-import { Link, useRouteMatch } from "react-router-dom";
-// import ImageGalleryItem from "../ImageGalleryItem/ImageGalleryItem";
-// import styles from "./MoviePage.module.css";
+import MovieGallery from "../MovieGallery/MovieGallery";
+import { serviceApi, finding } from "../../utility/ServiceApi";
 
-export default function MoviePage({ onSubmit, movie, onClick }) {
+export default function MoviePage() {
+  const [find, setFind] = useState("");
+  const [movies, setMovies] = useState([]);
+  useEffect(() => {
+    serviceApi(finding.SEARCH, find)
+      .then((data) => {
+        setMovies(data.results);
+      })
+      .catch((error) => {
+        toast.error(error, {
+          theme: "colored",
+        });
+      });
+  }, [find]);
+
+  const handleFormSubmit = (data) => {
+    if (data.trim() === "") {
+      setFind("");
+    } else {
+      setFind(data);
+    }
+  };
   const { url } = useRouteMatch();
-  // const url = "/movie";
   return (
     <Section>
-      <Searchbar onSubmit={onSubmit} />
+      <Searchbar onSubmit={handleFormSubmit} />
 
-      <ImageGallery arr={movie} onClick={onClick} url={url} />
+      <MovieGallery arr={movies} url={url} />
     </Section>
   );
 }

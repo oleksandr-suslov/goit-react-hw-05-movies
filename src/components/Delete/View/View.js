@@ -1,6 +1,6 @@
 import Loader from "react-loader-spinner";
-import Section from "../Section/Section";
-import ImageGallery from "../ImageGallery/ImageGallery";
+import Section from "../../Section/Section";
+import ImageGallery from "../../MovieGallery/MovieGallery";
 // import Button from "../Button/Button";
 
 var shortid = require("shortid");
