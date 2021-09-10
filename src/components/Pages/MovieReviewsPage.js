@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
-import { Link, useRouteMatch, useParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 
 import { toast } from "react-toastify";
 
 import Section from "../Section/Section";
 import { serviceApi, finding } from "../../utility/ServiceApi";
-import styles from "./MoviePage.module.css";
+import styles from "./Pages.module.css";
 
 export default function MovieReviewsPage() {
   const { movieId } = useParams();
@@ -13,7 +13,6 @@ export default function MovieReviewsPage() {
   useEffect(() => {
     serviceApi(finding.MOVIE, movieId, "reviews")
       .then((data) => {
-        console.log("MOVIE showCastOrReviews", data);
         setReviews(data.results);
       })
       .catch((error) => {
@@ -21,18 +20,22 @@ export default function MovieReviewsPage() {
           theme: "colored",
         });
       });
-  }, []);
+  }, [movieId]);
 
   return (
     <Section>
-      <h2>Reviews</h2>
-      {reviews &&
-        reviews.map((item) => (
-          <div>
-            <h3>{item.author}</h3>
-            <p>{item.content}</p>
-          </div>
-        ))}
+      <ul className={styles.ReviewsBox}>
+        {reviews &&
+          reviews.map((item) => (
+            <li className={styles.ReviewsBox}>
+              <h3 className={styles.ReviewsAuthor}>{item.author}</h3>
+              <p className={styles.ReviewsText}>{item.content}</p>
+            </li>
+          ))}
+        {reviews.length === 0 && (
+          <p className={styles.ReviewsAuthor}>No information</p>
+        )}
+      </ul>
     </Section>
   );
 }

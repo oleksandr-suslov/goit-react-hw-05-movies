@@ -12,9 +12,6 @@ const KEY = 'f563ae14d0dd21bfc240b1890e6683c0';
 
 const serviceApi = async (finding, firstVar, secondVar) => {
   let response;
-  // console.log('finding', finding);
-  // console.log('firstVar', firstVar);
-  // console.log('secondVar', secondVar);
   switch (finding) {
       case "trending":
         response = await axios.get(`${BASE_URL}trending/movie/week?api_key=${KEY}`);

@@ -1,0 +1,75 @@
+.GalleryTitle {
+  font-size: 24px;
+  margin: 0;
+  font-weight: 700;
+  margin-bottom: 15px;
+}
+.MovieWrapper {
+  display: flex;
+  text-align: justify;
+  border-bottom: 2px solid grey;
+  padding-bottom: 10px;
+  padding-top: 10px;
+}
+.MovieTitle {
+  font-size: 18px;
+  margin: 0;
+  margin-bottom: 15px;
+}
+.MovieImg {
+  margin-right: 50px;
+  background-color: cadetblue;
+  border-radius: 5px;
+}
+.MovieOverview {
+  font-size: 14px;
+  margin: 0;
+  font-weight: 500;
+  margin-bottom: 15px;
+}
+.MovieTitleWrap {
+  display: flex;
+}
+.MovieTitleWrap .MovieOverview {
+  margin-right: 20px;
+}
+.Link {
+  display: block;
+  padding: 15px 0;
+  border-bottom: 2px solid grey;
+  text-align: justify;
+}
+
+.CastImg {
+  width: 100px;
+  height: 150px;
+  margin: 10px;
+  background-color: cadetblue;
+  border-radius: 5px;
+  background-image: url("../../images/unnamed.jpg");
+  background-size: cover;
+}
+.CastBox {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+}
+.Cast {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+}
+.ReviewsBox {
+  display: block;
+  text-align: justify;
+  font-weight: 400;
+}
+.ReviewsAuthor {
+  font-size: 18px;
+  width: 200px;
+  margin-right: 50px;
+}
+.ReviewsText {
+  color: black;
+  font-size: 14px;
+}

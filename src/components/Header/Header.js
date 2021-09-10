@@ -5,22 +5,19 @@ import Section from "../Section/Section";
 export default function Header() {
   return (
     <Section>
-      <nav className={styles.NavList}>
-        <NavLink
-          exact
-          to="/"
-          className={styles.NavItem}
-          activeClassName={styles.activeLink}
-        >
-          Home
-        </NavLink>
-        <NavLink
-          to="/movie"
-          className={styles.NavItem}
-          activeClassName={styles.activeLink}
-        >
-          Movie
-        </NavLink>
+      <nav>
+        <ul className={styles.NavList}>
+          <li className={styles.NavItem}>
+            <NavLink exact to="/" activeClassName={styles.activeLink}>
+              Home
+            </NavLink>
+          </li>
+          <li className={styles.NavItem}>
+            <NavLink to="/movie" activeClassName={styles.activeLink}>
+              Movie
+            </NavLink>
+          </li>
+        </ul>
       </nav>
     </Section>
   );
