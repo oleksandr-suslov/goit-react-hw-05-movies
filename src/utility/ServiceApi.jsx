@@ -14,10 +14,10 @@ const serviceApi = async (finding, firstVar, secondVar) => {
   let response;
   switch (finding) {
       case "trending":
-        response = await axios.get(`${BASE_URL}trending/movie/week?api_key=${KEY}`);
+        response = await axios.get(`${BASE_URL}trending/movie/week?api_key=${KEY}&page=${firstVar}`);
         break;
       case "search":
-         response = await axios.get(`${BASE_URL}search/movie?api_key=${KEY}&language=en-US&page=1&include_adult=false&query=${firstVar}`); 
+         response = await axios.get(`${BASE_URL}search/movie?api_key=${KEY}&language=en-US&page=${firstVar}&include_adult=false&query=${secondVar}`); 
         break;
       case "movie":
         if (secondVar === 'cast')

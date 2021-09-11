@@ -15,10 +15,13 @@ import styles from "./Pages.module.css";
 
 const MovieCastPage = lazy(() => import("../Pages/MovieCastPage"));
 const MovieReviewsPage = lazy(() => import("../Pages/MovieReviewsPage"));
+
 export default function MovieDetailsPage() {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
   const { url } = useRouteMatch();
+  console.log(movieId);
+
   useEffect(() => {
     if (movieId) {
       serviceApi(finding.MOVIE, movieId)

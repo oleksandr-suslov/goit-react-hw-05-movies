@@ -7,6 +7,10 @@ export default function Searchbar({ onSubmit }) {
   const [find, setFind] = useState("");
   const history = useHistory();
   const location = useLocation();
+
+  // console.log("history", history);
+  // console.log("location", location);
+
   const handleFindImage = (e) => {
       setFind(e.currentTarget.value.toLowerCase());
     },
