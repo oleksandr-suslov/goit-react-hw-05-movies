@@ -1,0 +1,14 @@
+.ReviewsBox {
+  display: block;
+  text-align: justify;
+  font-weight: 400;
+}
+.ReviewsAuthor {
+  font-size: 18px;
+  width: 200px;
+  margin-right: 50px;
+}
+.ReviewsText {
+  color: black;
+  font-size: 14px;
+}

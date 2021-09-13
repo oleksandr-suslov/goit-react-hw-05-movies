@@ -4,27 +4,31 @@ import {
   useRouteMatch,
   Route,
   useParams,
-  Switch,
+  Switch, useLocation, useHistory
+  
 } from "react-router-dom";
 
 import { toast } from "react-toastify";
 
-import Section from "../Section/Section";
-import { serviceApi, finding } from "../../utility/ServiceApi";
+import Section from "../components/Section/Section";
+import { getMovieDetails } from "../utility/serviceApi";
 import styles from "./Pages.module.css";
 
-const MovieCastPage = lazy(() => import("../Pages/MovieCastPage"));
-const MovieReviewsPage = lazy(() => import("../Pages/MovieReviewsPage"));
+const MovieCast = lazy(() => import("../components/MovieCast/MovieCast"));
+const MovieReviews = lazy(() =>
+  import("../components/MovieReviews/MovieReviews")
+);
 
 export default function MovieDetailsPage() {
   const { movieId } = useParams();
   const [movie, setMovie] = useState(null);
   const { url } = useRouteMatch();
-  console.log(movieId);
+  const history = useHistory();
+  // const location = useLocation();
 
   useEffect(() => {
     if (movieId) {
-      serviceApi(finding.MOVIE, movieId)
+      getMovieDetails(movieId)
         .then(setMovie)
         .catch((error) => {
           toast.error(error, {
@@ -34,8 +38,18 @@ export default function MovieDetailsPage() {
     }
   }, [movieId]);
 
+  // <Route path={`${match.path}/reviews`} exact component={Reviews} />
+  //       <Route path={`${match.path}/cast`} exact component={Cast} />
+  const  urls  = useRouteMatch();
+  console.log("urls details", urls);
   return (
     <Section>
+      <button type="button"
+        onClick={()=>{history.goBack()}}
+        // className={styles.SearchFormButton}
+      >
+          Go back
+        </button>
       {movie && (
         <div className={styles.MovieWrapper}>
           <img
@@ -65,21 +79,21 @@ export default function MovieDetailsPage() {
         <h2 className={styles.MovieTitle}>Addition information</h2>
         <ul className={styles.MovieTitle}>
           <li>
-            <Link to={`${url}/cast`}>Cast</Link>
+            <Link to={{pathname:`${url}/cast`, state:{from: `${url}`}}}>Cast</Link>
           </li>
           <li>
-            <Link to={`${url}/reviews`}>Reviews</Link>
+            <Link to={{pathname:`${url}/reviews`, state:{from: `${url}`}}}>Reviews</Link>
           </li>
         </ul>
       </div>
       <Suspense fallback={<h2>LOADING ...</h2>}>
         <Switch>
-          <Route path="/movie/:movieId/cast">
-            <MovieCastPage />
+          <Route path="/movie/:movieId/cast" exact>
+            <MovieCast />
           </Route>
 
-          <Route path="/movie/:movieId/reviews">
-            <MovieReviewsPage />
+          <Route path="/movie/:movieId/reviews" exact>
+            <MovieReviews />
           </Route>
         </Switch>
       </Suspense>

@@ -1,0 +1,19 @@
+.CastImg {
+  width: 100px;
+  height: 150px;
+  margin: 10px;
+  background-color: cadetblue;
+  border-radius: 5px;
+  background-image: url("../../images/unnamed.jpg");
+  background-size: cover;
+}
+.CastBox {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0;
+}
+.Cast {
+  display: block;
+  font-size: 14px;
+  font-weight: 500;
+}

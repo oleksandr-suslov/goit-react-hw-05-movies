@@ -4,14 +4,14 @@ import { useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import Section from "../Section/Section";
-import { serviceApi, finding } from "../../utility/ServiceApi";
-import styles from "./Pages.module.css";
+import { getReviewsDetails } from "../../utility/serviceApi";
+import styles from "./MovieReviews.module.css";
 
-export default function MovieReviewsPage() {
+export default function MovieReviews() {
   const { movieId } = useParams();
   const [reviews, setReviews] = useState([]);
   useEffect(() => {
-    serviceApi(finding.MOVIE, movieId, "reviews")
+    getReviewsDetails(movieId)
       .then((data) => {
         setReviews(data.results);
       })
@@ -27,7 +27,7 @@ export default function MovieReviewsPage() {
       <ul className={styles.ReviewsBox}>
         {reviews &&
           reviews.map((item) => (
-            <li className={styles.ReviewsBox}>
+            <li className={styles.ReviewsBox} key={item.id}>
               <h3 className={styles.ReviewsAuthor}>{item.author}</h3>
               <p className={styles.ReviewsText}>{item.content}</p>
             </li>

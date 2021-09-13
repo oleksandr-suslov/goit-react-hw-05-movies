@@ -1,18 +1,18 @@
 import { useState, useEffect, lazy, Suspense } from "react";
-import {
-  useRouteMatch,
-  Route,
-  useLocation,
-  useHistory,
-} from "react-router-dom";
+import { useRouteMatch, useLocation, useHistory } from "react-router-dom";
 
 import { toast } from "react-toastify";
 
-import Searchbar from "../Searchbar/Searchbar";
-import Section from "../Section/Section";
-import { serviceApi, finding } from "../../utility/ServiceApi";
+import Searchbar from "../components/Searchbar/Searchbar";
+import Section from "../components/Section/Section";
+import { findingMovie } from "../utility/serviceApi";
 
-const MovieGallery = lazy(() => import("../MovieGallery/MovieGallery"));
+
+const queryString = require('query-string');
+
+const MovieGallery = lazy(() =>
+  import("../components/MovieGallery/MovieGallery")
+);
 export default function MoviePage() {
   const [find, setFind] = useState("");
   const [movies, setMovies] = useState(null);
@@ -24,18 +24,14 @@ export default function MoviePage() {
   // for open last page
   const history = useHistory();
   const location = useLocation();
-
-  const oldLocation = location.search.split("&");
-  let oldPage;
-  if (oldLocation.length === 2) {
-    oldPage = oldLocation[1].split("=")[1];
+  const parsed = queryString.parse(location.search);
+  let oldPage = parsed.page;
+  let oldQuery = ""
+   if (parsed.query) {
+     oldQuery = parsed.query;
   }
-  const oldQuery = oldLocation[0].split("=")[1] ?? "";
-  // console.log("oldPage", oldPage);
-  // console.log("oldQuery", oldQuery);
-
-  // console.log("oldLocation", oldLocation);
-  // =====
+    // =====
+  
   useEffect(() => {
     //for open last page
     if (oldPage !== page) {
@@ -46,18 +42,21 @@ export default function MoviePage() {
       setFind(oldQuery);
     }
     //====
+
     if (find === "") {
       return;
     }
-    serviceApi(finding.SEARCH, page, find)
+    findingMovie(page, find)
       .then((data) => {
         setMovies(data.results);
+        
         //for pagination
         const findTotalPages = Math.ceil(
           data.total_results / data.results.length
         );
         setTotalPage(findTotalPages);
         //====
+
       })
       .catch((error) => {
         toast.error(error, {
@@ -73,6 +72,7 @@ export default function MoviePage() {
       setFind(data);
     }
   };
+  
   //for pagination
   const handlePageClick = (event) => {
     let selected = event.selected + 1;
@@ -82,9 +82,16 @@ export default function MoviePage() {
     //====
   };
   //====
+
   const { url } = useRouteMatch();
+    // console.log("url movie", url);
   return (
     <Section>
+      <button type="button"
+        onClick={()=>{history.goBack()}}
+         >
+          Go back
+        </button>
       <Searchbar onSubmit={handleFormSubmit} />
       <Suspense fallback={<h2>LOADING ...</h2>}>
         {movies && (
@@ -93,13 +100,10 @@ export default function MoviePage() {
             onClick={handlePageClick} //for pagination
             arr={movies}
             url={url}
-          />
+                      />
         )}
       </Suspense>
 
-      {/* <Route path="/movie?query={find}">
-        <MovieGallery arr={movies} url={url} />
-      </Route> */}
     </Section>
   );
 }

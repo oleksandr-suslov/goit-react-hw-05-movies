@@ -1,5 +1,5 @@
 // import styles from "./Header.module.css";
-import Section from "../Section/Section";
+import Section from "../components/Section/Section";
 
 export default function NotFoundPage({ movie }) {
   return (

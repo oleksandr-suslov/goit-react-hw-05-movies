@@ -39,37 +39,3 @@
   border-bottom: 2px solid grey;
   text-align: justify;
 }
-
-.CastImg {
-  width: 100px;
-  height: 150px;
-  margin: 10px;
-  background-color: cadetblue;
-  border-radius: 5px;
-  background-image: url("../../images/unnamed.jpg");
-  background-size: cover;
-}
-.CastBox {
-  display: flex;
-  flex-wrap: wrap;
-  margin: 0;
-}
-.Cast {
-  display: block;
-  font-size: 14px;
-  font-weight: 500;
-}
-.ReviewsBox {
-  display: block;
-  text-align: justify;
-  font-weight: 400;
-}
-.ReviewsAuthor {
-  font-size: 18px;
-  width: 200px;
-  margin-right: 50px;
-}
-.ReviewsText {
-  color: black;
-  font-size: 14px;
-}

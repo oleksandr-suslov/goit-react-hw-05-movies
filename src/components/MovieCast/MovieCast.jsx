@@ -4,14 +4,14 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 
 import Section from "../Section/Section";
-import { serviceApi, finding } from "../../utility/ServiceApi";
-import styles from "./Pages.module.css";
+import { getCastDetails } from "../../utility/serviceApi";
+import styles from "./MovieCast.module.css";
 
-export default function MovieCastPage() {
+export default function MovieCast() {
   const { movieId } = useParams();
   const [casts, setCasts] = useState(null);
   useEffect(() => {
-    serviceApi(finding.MOVIE, movieId, "cast")
+    getCastDetails(movieId)
       .then((data) => {
         setCasts(data.cast);
       })
@@ -28,7 +28,7 @@ export default function MovieCastPage() {
       <ul className={styles.CastBox}>
         {casts &&
           casts.map((cast) => (
-            <li className={styles.Cast}>
+            <li className={styles.Cast} key={cast.id }>
               <img
                 src={`https://image.tmdb.org/t/p/w200${cast.profile_path}`}
                 alt={cast.name}
