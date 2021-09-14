@@ -6,13 +6,14 @@ import { toast } from "react-toastify";
 import Searchbar from "../components/Searchbar/Searchbar";
 import Section from "../components/Section/Section";
 import { findingMovie } from "../utility/serviceApi";
-
+import {routes} from '../utility/routes'
 
 const queryString = require('query-string');
 
 const MovieGallery = lazy(() =>
   import("../components/MovieGallery/MovieGallery")
 );
+
 export default function MoviePage() {
   const [find, setFind] = useState("");
   const [movies, setMovies] = useState(null);
@@ -30,10 +31,6 @@ export default function MoviePage() {
    if (parsed.query) {
      oldQuery = parsed.query;
   }
-    // =====
-  
-  useEffect(() => {
-    //for open last page
     if (oldPage !== page) {
       setPage(oldPage);
       setFind(oldQuery);
@@ -42,6 +39,8 @@ export default function MoviePage() {
       setFind(oldQuery);
     }
     //====
+  
+  useEffect(() => {
 
     if (find === "") {
       return;
@@ -84,11 +83,17 @@ export default function MoviePage() {
   //====
 
   const { url } = useRouteMatch();
-    // console.log("url movie", url);
+const onGoBack = () => {
+    if (location && location.state && location.state.from) {
+            history.push(location.state.from);
+            return
+          }
+          history.push(routes.home)
+  }
   return (
     <Section>
       <button type="button"
-        onClick={()=>{history.goBack()}}
+        onClick={onGoBack}
          >
           Go back
         </button>

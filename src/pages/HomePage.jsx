@@ -7,10 +7,10 @@ import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
 import { getTrendingMovies } from "../utility/serviceApi";
 import Section from "../components/Section/Section";
 import styles from "./Pages.module.css";
+import {routes} from '../utility/routes'
 
 
 const queryString = require('query-string');
-
 
 const MovieGallery = lazy(() =>
   import(
@@ -19,7 +19,7 @@ const MovieGallery = lazy(() =>
 );
 
 export default function HomePage() {
-  const url = "/movie"; // нужно исправить
+  const url = routes.movie; 
 
 
   const [moviesTrend, setMoviesTrend] = useState([]);
@@ -61,7 +61,6 @@ export default function HomePage() {
   //for pagination
   const handlePageClick = (event) => {
     let selected = event.selected + 1;
-    console.log(event.selected);
     setPage(selected);
     history.push({ ...location, search: `page=${selected}` });
   };

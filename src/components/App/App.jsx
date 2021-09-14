@@ -5,7 +5,7 @@ import Section from "../Section/Section";
 import "react-toastify/dist/ReactToastify.css";
 import Header from "../Header/Header";
 import "react-loader-spinner/dist/loader/css/react-spinner-loader.css";
-
+import {routes} from '../../utility/routes'
 
 import styles from "./App.css";
 
@@ -24,21 +24,21 @@ export default function App() {
         <Switch>
             <Route
               exact
-              path="/" >
+              path={routes.home} >
             <HomePage    />
           </Route>
 
             <Route
               exact
-              path="/movie" >
+              path={routes.movie} >
             <MoviePage />
           </Route>
 
-          <Route path="/movie/:movieId">
+          <Route path={routes.details}>
             <MovieDetailsPage />
           </Route>
 
-          <Redirect to={"/"} />
+          <Redirect to={routes.home} />
                     
         </Switch>
       </Suspense>

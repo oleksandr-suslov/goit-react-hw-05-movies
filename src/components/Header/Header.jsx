@@ -1,10 +1,11 @@
-import { NavLink,useRouteMatch } from "react-router-dom";
+import { NavLink, useLocation } from "react-router-dom";
 import styles from "./Header.module.css";
 import Section from "../Section/Section";
+import {routes} from '../../utility/routes'
 
 export default function Header() {
-  //  const  url   = useRouteMatch();
-  // console.log("url header", url);
+  const location = useLocation();
+
   return (
     <Section>
       <nav>
@@ -12,17 +13,17 @@ export default function Header() {
           <li className={styles.NavItem}>
             <NavLink
               exact
-              // to={{pathname:`${url}`, state:{from: `${url}`}}}
-              to="/"
+              to={{pathname: routes.home, state:{from: location}}}
+              
               activeClassName={styles.activeLink}>
               Home
             </NavLink>
           </li>
           <li className={styles.NavItem}>
             <NavLink
-              //  exact
-              // to={{pathname:`${url}movie`, state:{from: `${url}`}}}
-              to="/movie"
+              
+              to={{pathname:routes.movie, state:{from: location ??routes.home}}}
+              
               activeClassName={styles.activeLink}>
               Movie
             </NavLink>

@@ -13,6 +13,7 @@ import { toast } from "react-toastify";
 import Section from "../components/Section/Section";
 import { getMovieDetails } from "../utility/serviceApi";
 import styles from "./Pages.module.css";
+import {routes} from '../utility/routes'
 
 const MovieCast = lazy(() => import("../components/MovieCast/MovieCast"));
 const MovieReviews = lazy(() =>
@@ -24,7 +25,7 @@ export default function MovieDetailsPage() {
   const [movie, setMovie] = useState(null);
   const { url } = useRouteMatch();
   const history = useHistory();
-  // const location = useLocation();
+  const location = useLocation();
 
   useEffect(() => {
     if (movieId) {
@@ -37,16 +38,18 @@ export default function MovieDetailsPage() {
         });
     }
   }, [movieId]);
+  const onGoBack = () => {
+    if (location && location.state && location.state.from) {
+            history.push(location.state.from);
+            return
+          }
+          history.push(routes.home)
+  }
 
-  // <Route path={`${match.path}/reviews`} exact component={Reviews} />
-  //       <Route path={`${match.path}/cast`} exact component={Cast} />
-  const  urls  = useRouteMatch();
-  console.log("urls details", urls);
   return (
     <Section>
       <button type="button"
-        onClick={()=>{history.goBack()}}
-        // className={styles.SearchFormButton}
+        onClick={onGoBack}
       >
           Go back
         </button>
@@ -79,10 +82,10 @@ export default function MovieDetailsPage() {
         <h2 className={styles.MovieTitle}>Addition information</h2>
         <ul className={styles.MovieTitle}>
           <li>
-            <Link to={{pathname:`${url}/cast`, state:{from: `${url}`}}}>Cast</Link>
+            <Link to={{pathname:`${url}/cast`, state:{from: location && location.state && location.state.from?location.state.from:routes.home}}}>Cast</Link>
           </li>
           <li>
-            <Link to={{pathname:`${url}/reviews`, state:{from: `${url}`}}}>Reviews</Link>
+            <Link to={{pathname:`${url}/reviews`, state:{from: location && location.state && location.state.from?location.state.from:routes.home}}}>Reviews</Link>
           </li>
         </ul>
       </div>
